@@ -18,8 +18,7 @@ import java.io.Serializable;
 @Component
 public class IdempotenceAspect {
 
-    private final Jedis jedis = new Jedis();
-    private final IdempotentAgent idempotentAgent = new RedisAgent(jedis);
+    private final IdempotentAgent idempotentAgent = new RedisAgent("localhost", 6379);
     // private final IdempotentAgent idempotentAgent = new MemoryAgent();
     private final HashingStrategy hashingStrategy = new HashCodeStrategy();
 
