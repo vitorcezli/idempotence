@@ -1,11 +1,11 @@
-package com.example.idempotence.idempotent.hash.concatenator;
+package com.example.idempotence.idempotent.hash.hashcode;
 
 import com.example.idempotence.idempotent.hash.HashingStrategy;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-public class ConcatenatorHash implements HashingStrategy {
+public class HashCodeStrategy implements HashingStrategy {
 
     @Override
     public String calculateHash(Object[] objects) {

@@ -1,10 +1,9 @@
 package com.example.idempotence;
 
 import com.example.idempotence.idempotent.agents.IdempotentAgent;
-import com.example.idempotence.idempotent.agents.memory.MemoryAgent;
 import com.example.idempotence.idempotent.agents.redis.RedisAgent;
 import com.example.idempotence.idempotent.hash.HashingStrategy;
-import com.example.idempotence.idempotent.hash.concatenator.ConcatenatorHash;
+import com.example.idempotence.idempotent.hash.hashcode.HashCodeStrategy;
 import com.example.idempotence.idempotent.payload.IdempotentPayload;
 import com.example.idempotence.idempotent.payload.IdempotentPayloadSerializer;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -22,7 +21,7 @@ public class IdempotenceAspect {
     private final Jedis jedis = new Jedis();
     private final IdempotentAgent idempotentAgent = new RedisAgent(jedis);
     // private final IdempotentAgent idempotentAgent = new MemoryAgent();
-    private final HashingStrategy hashingStrategy = new ConcatenatorHash();
+    private final HashingStrategy hashingStrategy = new HashCodeStrategy();
 
     @Around("@annotation(com.example.idempotence.idempotent.annotations.Idempotent)")
     public Object assertIdempotence(ProceedingJoinPoint joinPoint) throws Throwable {
