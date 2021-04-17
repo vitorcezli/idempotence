@@ -3,7 +3,7 @@ package com.example.idempotence;
 import com.example.idempotence.idempotent.agents.IdempotentAgent;
 import com.example.idempotence.idempotent.agents.redis.RedisAgent;
 import com.example.idempotence.idempotent.hash.HashingStrategy;
-import com.example.idempotence.idempotent.hash.hashcode.HashCodeStrategy;
+import com.example.idempotence.idempotent.hash.HashCodeStrategy;
 import com.example.idempotence.idempotent.payload.IdempotentPayload;
 import com.example.idempotence.idempotent.payload.IdempotentPayloadSerializer;
 import org.aspectj.lang.ProceedingJoinPoint;
