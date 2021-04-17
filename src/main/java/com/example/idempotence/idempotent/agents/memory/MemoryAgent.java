@@ -7,15 +7,24 @@ import java.util.HashMap;
 
 public class MemoryAgent implements IdempotentAgent {
 
-    private final HashMap<String, byte[]> mapping = new HashMap<>();
+    private final HashMap<String, byte[]> mapping;
+
+    public MemoryAgent() {
+        this.mapping = new HashMap<>();
+    }
 
     @Override
-    public boolean executed(String hash) {
+    public byte[] read(final String hash) {
+        return this.mapping.get(hash);
+    }
+
+    @Override
+    public boolean executed(final String hash) {
         return this.mapping.containsKey(hash);
     }
 
     @Override
-    public void save(String hash, byte[] payload, int expireSeconds) {
+    public void save(final String hash, final byte[] payload, final int expireSeconds) {
         this.mapping.put(hash, payload);
     }
 }

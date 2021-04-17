@@ -13,6 +13,8 @@ import org.aspectj.lang.annotation.Aspect;
 import org.springframework.stereotype.Component;
 import redis.clients.jedis.Jedis;
 
+import java.io.Serializable;
+
 @Aspect
 @Component
 public class IdempotenceAspect {
@@ -23,27 +25,30 @@ public class IdempotenceAspect {
     private final HashingStrategy hashingStrategy = new ConcatenatorHash();
 
     @Around("@annotation(com.example.idempotence.idempotent.annotations.Idempotent)")
-    public void assertIdempotence(ProceedingJoinPoint joinPoint) throws Throwable {
+    public Object assertIdempotence(ProceedingJoinPoint joinPoint) throws Throwable {
         Object[] objects = joinPoint.getArgs();
 
         if (objects.length == 0) {
             System.out.println("This code will always be executed");
-            return;
+            return joinPoint.proceed();
         }
 
         String hash = hashingStrategy.calculateHash(objects);
         if (idempotentAgent.executed(hash)) {
             System.out.println("Object already executed");
-            return;
+            byte[] returnValue = idempotentAgent.read(hash);
+            final IdempotentPayload returnPayload = IdempotentPayloadSerializer.deserialize(returnValue);
+            return returnPayload.getReturnObject();
         }
 
-        byte[] payload = IdempotentPayloadSerializer.serialize(buildIdempotentPayload());
+        final Object returnValue = joinPoint.proceed();
+        byte[] payload = IdempotentPayloadSerializer.serialize(buildIdempotentPayload(returnValue));
         idempotentAgent.save(hash, payload, 10);
 
-        joinPoint.proceed();
+        return returnValue;
     }
 
-    private IdempotentPayload buildIdempotentPayload() {
-        return new IdempotentPayload(true, null);
+    private IdempotentPayload buildIdempotentPayload(final Object returnObject) {
+        return new IdempotentPayload(false, (Serializable) returnObject);
     }
 }

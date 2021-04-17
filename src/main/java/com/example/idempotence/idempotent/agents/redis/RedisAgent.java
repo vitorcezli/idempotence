@@ -14,16 +14,29 @@ public class RedisAgent implements IdempotentAgent {
     }
 
     @Override
-    public boolean executed(String hash) {
-        return this.jedis.exists(hash.getBytes(StandardCharsets.UTF_8));
+    public byte[] read(final String hash) {
+        final byte[] hashAsBytes = stringToBytes(hash);
+        return this.jedis.get(hashAsBytes);
     }
 
     @Override
-    public void save(String hash, byte[] payload, int expireSeconds) {
+    public boolean executed(final String hash) {
+        final byte[] hashAsBytes = stringToBytes(hash);
+        return this.jedis.exists(hashAsBytes);
+    }
+
+    @Override
+    public void save(final String hash, final byte[] payload, final int expireSeconds) {
+        final byte[] hashAsBytes = stringToBytes(hash);
+
         if (expireSeconds == 0) {
-            this.jedis.set(hash.getBytes(StandardCharsets.UTF_8), payload);
+            this.jedis.set(hashAsBytes, payload);
         } else {
-            this.jedis.setex(hash.getBytes(StandardCharsets.UTF_8), expireSeconds, payload);
+            this.jedis.setex(hashAsBytes, expireSeconds, payload);
         }
+    }
+
+    private byte[] stringToBytes(final String string) {
+        return string.getBytes(StandardCharsets.UTF_8);
     }
 }

@@ -15,7 +15,8 @@ public class TestingLog {
 
     @GetMapping
     public ResponseEntity getResponse() {
-        testingService.printSomething("hello", "world");
+        final String result = testingService.getSomething("hello", "world");
+        System.out.print(result);
         return ResponseEntity.ok().build();
     }
 }

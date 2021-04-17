@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 public class TestingService {
 
     @Idempotent
-    public void printSomething(String prefix, String suffix) {
-        System.out.printf("%s\t%s\n", prefix, suffix);
+    public String getSomething(String prefix, String suffix) {
+        return String.format("%s\t%s\n", prefix, suffix);
     }
 }
