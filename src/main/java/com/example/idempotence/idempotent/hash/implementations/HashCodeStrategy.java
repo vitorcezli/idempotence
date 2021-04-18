@@ -1,4 +1,6 @@
-package com.example.idempotence.idempotent.hash;
+package com.example.idempotence.idempotent.hash.implementations;
+
+import com.example.idempotence.idempotent.hash.HashingStrategy;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;

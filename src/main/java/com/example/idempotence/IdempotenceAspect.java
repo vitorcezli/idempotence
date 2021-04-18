@@ -3,14 +3,13 @@ package com.example.idempotence;
 import com.example.idempotence.idempotent.agents.IdempotentAgent;
 import com.example.idempotence.idempotent.agents.redis.RedisAgent;
 import com.example.idempotence.idempotent.hash.HashingStrategy;
-import com.example.idempotence.idempotent.hash.HashCodeStrategy;
+import com.example.idempotence.idempotent.hash.implementations.HashCodeStrategy;
 import com.example.idempotence.idempotent.payload.IdempotentPayload;
 import com.example.idempotence.idempotent.payload.IdempotentPayloadSerializer;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.stereotype.Component;
-import redis.clients.jedis.Jedis;
 
 import java.io.Serializable;
 
