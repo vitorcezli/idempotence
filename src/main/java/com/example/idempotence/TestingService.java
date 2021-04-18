@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class TestingService {
 
-    @Idempotent
+    @Idempotent(strategy = "hashCode")
     public String getSomething(String prefix, String suffix) {
         return String.format("%s\t%s\n", prefix, suffix);
     }

@@ -8,12 +8,15 @@ import java.util.Map;
 
 public class HashingStrategySelector {
 
-    public static Map<String, HashingStrategy> strategies = new HashMap<>() {{
+    private final static Map<String, HashingStrategy> strategies = new HashMap<>() {{
         put("toString", new ToStringStrategy());
         put("hashCode", new HashCodeStrategy());
     }};
 
-    public static HashingStrategy select(final String hash) {
+    public static HashingStrategy select(final String hash) throws HashingStrategyException {
+        if (!strategies.containsKey(hash)) {
+            throw new HashingStrategyException(hash);
+        }
         return strategies.get(hash);
     }
 }

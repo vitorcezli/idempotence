@@ -2,16 +2,19 @@ package com.example.idempotence;
 
 import com.example.idempotence.idempotent.agents.IdempotentAgent;
 import com.example.idempotence.idempotent.agents.redis.RedisAgent;
+import com.example.idempotence.idempotent.annotations.Idempotent;
 import com.example.idempotence.idempotent.hash.HashingStrategy;
-import com.example.idempotence.idempotent.hash.implementations.HashCodeStrategy;
+import com.example.idempotence.idempotent.hash.HashingStrategySelector;
 import com.example.idempotence.idempotent.payload.IdempotentPayload;
 import com.example.idempotence.idempotent.payload.IdempotentPayloadSerializer;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
+import java.lang.reflect.Method;
 
 @Aspect
 @Component
@@ -19,7 +22,6 @@ public class IdempotenceAspect {
 
     private final IdempotentAgent idempotentAgent = new RedisAgent("localhost", 6379);
     // private final IdempotentAgent idempotentAgent = new MemoryAgent();
-    private final HashingStrategy hashingStrategy = new HashCodeStrategy();
 
     @Around("@annotation(com.example.idempotence.idempotent.annotations.Idempotent)")
     public Object assertIdempotence(ProceedingJoinPoint joinPoint) throws Throwable {
@@ -30,6 +32,11 @@ public class IdempotenceAspect {
             return joinPoint.proceed();
         }
 
+        MethodSignature signature = (MethodSignature) joinPoint.getSignature();
+        Method method = signature.getMethod();
+        Idempotent idempotentAnnotation = method.getAnnotation(Idempotent.class);
+
+        final HashingStrategy hashingStrategy = HashingStrategySelector.select(idempotentAnnotation.strategy());
         String hash = hashingStrategy.calculateHash(objects);
         if (idempotentAgent.executed(hash)) {
             System.out.println("Object already executed");
