@@ -1,4 +1,4 @@
-package com.example.idempotence.filter;
+package com.example.idempotence.idempotent.filter;
 
 public class ParameterFilterException extends Exception {
 
