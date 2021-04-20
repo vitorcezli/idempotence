@@ -1,5 +1,6 @@
 package com.example.idempotence;
 
+import com.example.idempotence.idempotent.filter.ParameterFilter;
 import com.example.idempotence.idempotent.filter.ParameterFilterException;
 import com.example.idempotence.idempotent.agents.IdempotentAgent;
 import com.example.idempotence.idempotent.agents.redis.RedisAgent;
@@ -41,7 +42,7 @@ public class IdempotenceAspect {
         final List<String> parameterNames = Arrays.asList(signature.getParameterNames());
         final Object[] allArgs = joinPoint.getArgs();
 
-        Object[] usedArgs = filter(includes, excludes, parameterNames, allArgs);
+        Object[] usedArgs = ParameterFilter.filter(includes, excludes, parameterNames, allArgs);
 
         if (usedArgs.length == 0) {
             System.out.println("This code will always be executed");
@@ -62,71 +63,6 @@ public class IdempotenceAspect {
         idempotentAgent.save(hash, payload, 10);
 
         return returnValue;
-    }
-
-    private Object[] filter(
-            final List<String> includes,
-            final List<String> excludes,
-            final List<String> parameterNames,
-            final Object[] args
-    ) throws ParameterFilterException {
-        if (containsFilterValues(includes)) {
-            return processInclusion(includes, parameterNames, args);
-        }
-        if (containsFilterValues(excludes)) {
-            return processExclusion(excludes, parameterNames, args);
-        }
-
-        return args;
-    }
-
-    private Object[] processInclusion(
-            final List<String> filterValues,
-            final List<String> parameters,
-            Object[] args
-    ) throws ParameterFilterException {
-        assertFilterValuesAreValid(filterValues, parameters);
-
-        List<Object> selectedArgs = new ArrayList<>();
-        for (int i = 0; i < parameters.size(); i++) {
-            if (filterValues.contains(parameters.get(i))) {
-                selectedArgs.add(args[i]);
-            }
-        }
-
-        return selectedArgs.toArray();
-    }
-
-    private Object[] processExclusion(
-            final List<String> filterValues,
-            final List<String> parameters,
-            Object[] args
-    ) throws ParameterFilterException {
-        assertFilterValuesAreValid(filterValues, parameters);
-
-        List<Object> selectedArgs = new ArrayList<>();
-        for (int i = 0; i < parameters.size(); i++) {
-            if (!filterValues.contains(parameters.get(i))) {
-                selectedArgs.add(args[i]);
-            }
-        }
-
-        return selectedArgs.toArray();
-    }
-
-    private void assertFilterValuesAreValid(final List<String> filterValues, final List<String> parameters)
-            throws ParameterFilterException {
-        for (final String filterValue : filterValues) {
-            if (!parameters.contains(filterValue)) {
-                final String message = "filter '" + filterValue + "' on include/exclude "
-                        + "has no correspondence with function parameters";
-                throw new ParameterFilterException(message);
-            }
-        }
-    }
-
-    private boolean containsFilterValues(final List<String> filterValues) {
-        return 1 != filterValues.size() || !"".equals(filterValues.get(0));
     }
 
     private IdempotentPayload buildIdempotentPayload(final Object returnObject) {
