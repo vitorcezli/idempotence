@@ -10,5 +10,5 @@ import java.lang.annotation.Target;
 public @interface Idempotent {
     String[] include() default "";
     String[] exclude() default "";
-    String strategy() default "toString";
+    String strategy() default "hashCode";
 }
