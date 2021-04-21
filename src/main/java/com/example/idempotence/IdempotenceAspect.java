@@ -1,5 +1,6 @@
 package com.example.idempotence;
 
+import com.example.idempotence.idempotent.configuration.IdempotenceProps;
 import com.example.idempotence.idempotent.filter.ParameterFilter;
 import com.example.idempotence.idempotent.filter.ParameterFilterException;
 import com.example.idempotence.idempotent.agents.IdempotentAgent;
@@ -14,6 +15,7 @@ import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
@@ -26,6 +28,13 @@ import java.util.List;
 @Component
 public class IdempotenceAspect {
 
+    private final IdempotenceProps idempotenceProps;
+
+    @Autowired
+    public IdempotenceAspect(final IdempotenceProps idempotenceProps) {
+        this.idempotenceProps = idempotenceProps;
+    }
+
     private final IdempotentAgent idempotentAgent = new RedisAgent("localhost", 6379);
     // private final IdempotentAgent idempotentAgent = new MemoryAgent();
 
@@ -35,7 +44,11 @@ public class IdempotenceAspect {
         Method method = signature.getMethod();
 
         Idempotent idempotentAnnotation = method.getAnnotation(Idempotent.class);
-        final String strategyString = idempotentAnnotation.strategy();
+        String strategyString = idempotentAnnotation.strategy();
+        if (strategyString.length() == 0) {
+            strategyString = idempotenceProps.getHash();
+        }
+
         final List<String> includes = Arrays.asList(idempotentAnnotation.include());
         final List<String> excludes = Arrays.asList(idempotentAnnotation.exclude());
 
@@ -60,7 +73,7 @@ public class IdempotenceAspect {
 
         final Object returnValue = joinPoint.proceed();
         byte[] payload = IdempotentPayloadSerializer.serialize(buildIdempotentPayload(returnValue));
-        idempotentAgent.save(hash, payload, 10);
+        idempotentAgent.save(hash, payload, idempotenceProps.getTtl());
 
         return returnValue;
     }
