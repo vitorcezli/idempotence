@@ -1,7 +1,6 @@
 package com.example.idempotence.idempotent.agents.memory;
 
 import com.example.idempotence.idempotent.agents.IdempotentAgent;
-import com.example.idempotence.idempotent.payload.IdempotentPayload;
 
 import java.util.HashMap;
 

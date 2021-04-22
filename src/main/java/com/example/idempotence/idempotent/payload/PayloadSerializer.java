@@ -6,14 +6,15 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 
-public class IdempotentPayloadSerializer {
+public class PayloadSerializer {
 
-    public static byte[] serialize(IdempotentPayload idempotentPayload) throws IOException {
+    public static byte[] serialize(Serializable serializable) throws IOException {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
 
-        objectOutputStream.writeObject(idempotentPayload);
+        objectOutputStream.writeObject(serializable);
         objectOutputStream.flush();
         objectOutputStream.close();
 
@@ -21,14 +22,14 @@ public class IdempotentPayloadSerializer {
         return byteArrayOutputStream.toByteArray();
     }
 
-    public static IdempotentPayload deserialize(byte[] binaryObject)
+    public static Serializable deserialize(byte[] binaryObject)
             throws IOException, ClassNotFoundException {
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(binaryObject);
         ObjectInput objectInputStream = new ObjectInputStream(byteArrayInputStream);
 
-        IdempotentPayload idempotentPayload = (IdempotentPayload) objectInputStream.readObject();
+        Serializable serializable = (Serializable) objectInputStream.readObject();
         objectInputStream.close();
 
-        return idempotentPayload;
+        return serializable;
     }
 }

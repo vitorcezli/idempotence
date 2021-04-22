@@ -2,16 +2,13 @@ package com.example.idempotence;
 
 import com.example.idempotence.idempotent.configuration.IdempotenceProps;
 import com.example.idempotence.idempotent.filter.ParameterFilter;
-import com.example.idempotence.idempotent.filter.ParameterFilterException;
 import com.example.idempotence.idempotent.agents.IdempotentAgent;
-import com.example.idempotence.idempotent.agents.redis.RedisAgent;
 import com.example.idempotence.idempotent.annotations.Idempotent;
 import com.example.idempotence.idempotent.hash.HashingStrategy;
+import com.example.idempotence.idempotent.hash.HashingStrategyException;
 import com.example.idempotence.idempotent.hash.HashingStrategySelector;
-import com.example.idempotence.idempotent.payload.IdempotentPayload;
-import com.example.idempotence.idempotent.payload.IdempotentPayloadSerializer;
+import com.example.idempotence.idempotent.payload.PayloadSerializer;
 import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
@@ -20,7 +17,6 @@ import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -43,10 +39,6 @@ public class IdempotenceAspect {
         Method method = signature.getMethod();
 
         Idempotent idempotentAnnotation = method.getAnnotation(Idempotent.class);
-        String strategyString = idempotentAnnotation.strategy();
-        if (strategyString.length() == 0) {
-            strategyString = idempotenceProps.getHash();
-        }
 
         final List<String> includes = Arrays.asList(idempotentAnnotation.include());
         final List<String> excludes = Arrays.asList(idempotentAnnotation.exclude());
@@ -61,23 +53,28 @@ public class IdempotenceAspect {
             return joinPoint.proceed();
         }
 
-        final HashingStrategy hashingStrategy = HashingStrategySelector.select(strategyString);
+        final HashingStrategy hashingStrategy = getHashingStrategy(idempotentAnnotation);
         String hash = hashingStrategy.calculateHash(usedArgs);
         if (idempotentAgent.executed(hash)) {
             System.out.println("Object already executed");
             byte[] returnValue = idempotentAgent.read(hash);
-            final IdempotentPayload returnPayload = IdempotentPayloadSerializer.deserialize(returnValue);
-            return returnPayload.getReturnObject();
+            return PayloadSerializer.deserialize(returnValue);
         }
 
         final Object returnValue = joinPoint.proceed();
-        byte[] payload = IdempotentPayloadSerializer.serialize(buildIdempotentPayload(returnValue));
+        byte[] payload = PayloadSerializer.serialize((Serializable) returnValue);
         idempotentAgent.save(hash, payload, idempotenceProps.getTtl());
 
         return returnValue;
     }
 
-    private IdempotentPayload buildIdempotentPayload(final Object returnObject) {
-        return new IdempotentPayload(false, (Serializable) returnObject);
+    private HashingStrategy getHashingStrategy(final Idempotent idempotent)
+            throws HashingStrategyException {
+        String strategyString = idempotent.strategy();
+        if (strategyString.length() == 0) {
+            strategyString = idempotenceProps.getHash();
+        }
+
+        return HashingStrategySelector.select(strategyString);
     }
 }
