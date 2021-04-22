@@ -29,14 +29,13 @@ import java.util.List;
 public class IdempotenceAspect {
 
     private final IdempotenceProps idempotenceProps;
+    private final IdempotentAgent idempotentAgent;
 
     @Autowired
-    public IdempotenceAspect(final IdempotenceProps idempotenceProps) {
+    public IdempotenceAspect(final IdempotenceProps idempotenceProps, final IdempotentAgent idempotentAgent) {
         this.idempotenceProps = idempotenceProps;
+        this.idempotentAgent = idempotentAgent;
     }
-
-    private final IdempotentAgent idempotentAgent = new RedisAgent("localhost", 6379);
-    // private final IdempotentAgent idempotentAgent = new MemoryAgent();
 
     @Around("@annotation(com.example.idempotence.idempotent.annotations.Idempotent)")
     public Object assertIdempotence(ProceedingJoinPoint joinPoint) throws Throwable {
