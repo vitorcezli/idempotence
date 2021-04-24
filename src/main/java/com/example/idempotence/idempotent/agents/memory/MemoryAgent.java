@@ -14,12 +14,10 @@ public class MemoryAgent implements IdempotentAgent {
 
     @Override
     public byte[] read(final String hash) {
+        if (!this.mapping.containsKey(hash)) {
+            return null;
+        }
         return this.mapping.get(hash);
-    }
-
-    @Override
-    public boolean executed(final String hash) {
-        return this.mapping.containsKey(hash);
     }
 
     @Override

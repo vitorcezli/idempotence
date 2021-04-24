@@ -55,17 +55,18 @@ public class IdempotenceAspect {
 
         final HashingStrategy hashingStrategy = getHashingStrategy(idempotentAnnotation);
         String hash = hashingStrategy.calculateHash(usedArgs);
-        if (idempotentAgent.executed(hash)) {
+
+        byte[] returnValue = idempotentAgent.read(hash);
+        if (null != returnValue) {
             System.out.println("Object already executed");
-            byte[] returnValue = idempotentAgent.read(hash);
             return PayloadSerializer.deserialize(returnValue);
         }
 
-        final Object returnValue = joinPoint.proceed();
-        byte[] payload = PayloadSerializer.serialize((Serializable) returnValue);
+        final Object returnedObject = joinPoint.proceed();
+        byte[] payload = PayloadSerializer.serialize((Serializable) returnedObject);
         idempotentAgent.save(hash, payload, getTtl(idempotentAnnotation));
 
-        return returnValue;
+        return returnedObject;
     }
 
     private HashingStrategy getHashingStrategy(final Idempotent idempotent)
