@@ -8,5 +8,5 @@ public interface IdempotentAgent {
      */
     byte[] read(String hash);
 
-    void save(String hash, byte[] payload, int expireSeconds);
+    void save(String hash, byte[] payload, int ttl);
 }

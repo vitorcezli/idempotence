@@ -24,13 +24,13 @@ public class RedisAgent implements IdempotentAgent {
     }
 
     @Override
-    public void save(final String hash, final byte[] payload, final int expireSeconds) {
+    public void save(final String hash, final byte[] payload, final int ttl) {
         final byte[] hashAsBytes = stringToBytes(hash);
 
-        if (expireSeconds == 0) {
+        if (ttl == 0) {
             this.jedis.set(hashAsBytes, payload);
         } else {
-            this.jedis.setex(hashAsBytes, expireSeconds, payload);
+            this.jedis.setex(hashAsBytes, ttl, payload);
         }
     }
 
