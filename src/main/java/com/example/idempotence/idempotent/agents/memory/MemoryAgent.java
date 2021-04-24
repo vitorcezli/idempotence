@@ -1,12 +1,14 @@
 package com.example.idempotence.idempotent.agents.memory;
 
 import com.example.idempotence.idempotent.agents.IdempotentAgent;
+import org.apache.commons.collections4.map.PassiveExpiringMap;
 
 import java.util.HashMap;
+import java.util.Set;
 
 public class MemoryAgent implements IdempotentAgent {
 
-    private final HashMap<String, byte[]> mapping;
+    private final HashMap<Integer, PassiveExpiringMap<String, byte[]>> mapping;
 
     public MemoryAgent() {
         this.mapping = new HashMap<>();
@@ -14,14 +16,34 @@ public class MemoryAgent implements IdempotentAgent {
 
     @Override
     public byte[] read(final String hash) {
-        if (!this.mapping.containsKey(hash)) {
-            return null;
+        for (final PassiveExpiringMap<String, byte[]> map : this.mapping.values()) {
+            byte[] object = map.get(hash);
+            if (null != object) {
+                return object;
+            }
         }
-        return this.mapping.get(hash);
+        return null;
     }
 
     @Override
-    public void save(final String hash, final byte[] payload, final int expireSeconds) {
-        this.mapping.put(hash, payload);
+    public void save(final String hash, final byte[] payload, final int ttl) {
+        assertPassiveExpiringMapForTtl(ttl);
+        final PassiveExpiringMap<String, byte[]> map = this.mapping.get(ttl);
+        map.put(hash, payload);
+    }
+
+    private void assertPassiveExpiringMapForTtl(final int ttl) {
+        if (!this.mapping.containsKey(ttl)) {
+            final PassiveExpiringMap<String, byte[]> map = generateMapForTtl(ttl);
+            this.mapping.put(ttl, map);
+        }
+    }
+
+    private PassiveExpiringMap<String, byte[]> generateMapForTtl(final int ttl) {
+        if (ttl == 0) {
+            return new PassiveExpiringMap<>();
+        }
+        final int ttlMillis = ttl * 1000;
+        return new PassiveExpiringMap<>(ttlMillis);
     }
 }
