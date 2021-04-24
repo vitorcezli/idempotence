@@ -11,4 +11,5 @@ public @interface Idempotent {
     String[] include() default "";
     String[] exclude() default "";
     String strategy() default "";
+    int ttl() default -1;
 }

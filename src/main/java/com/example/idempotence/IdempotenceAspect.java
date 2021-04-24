@@ -63,7 +63,7 @@ public class IdempotenceAspect {
 
         final Object returnValue = joinPoint.proceed();
         byte[] payload = PayloadSerializer.serialize((Serializable) returnValue);
-        idempotentAgent.save(hash, payload, idempotenceProps.getTtl());
+        idempotentAgent.save(hash, payload, getTtl(idempotentAnnotation));
 
         return returnValue;
     }
@@ -76,5 +76,14 @@ public class IdempotenceAspect {
         }
 
         return HashingStrategySelector.select(strategyString);
+    }
+
+    private int getTtl(final Idempotent idempotent) {
+        int ttl = idempotent.ttl();
+        if (ttl < 0) {
+            ttl = idempotenceProps.getTtl();
+        }
+
+        return ttl;
     }
 }
