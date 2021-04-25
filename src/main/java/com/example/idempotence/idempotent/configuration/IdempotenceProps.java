@@ -18,12 +18,14 @@ public class IdempotenceProps {
     @NotEmpty
     private String hash = "hashCode";
 
+    private boolean logging = false;
+
     public void setTtl(final int ttl) {
         this.ttl = ttl;
     }
 
     public int getTtl() {
-        return ttl;
+        return this.ttl;
     }
 
     public void setHash(final String hash) {
@@ -31,6 +33,14 @@ public class IdempotenceProps {
     }
 
     public String getHash() {
-        return hash;
+        return this.hash;
+    }
+
+    public void setLogging(final boolean logging) {
+        this.logging = logging;
+    }
+
+    public boolean getLogging() {
+        return this.logging;
     }
 }
