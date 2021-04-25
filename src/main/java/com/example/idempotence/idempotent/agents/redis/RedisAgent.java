@@ -13,6 +13,16 @@ public class RedisAgent implements IdempotentAgent {
         this.jedis = new Jedis(server, port);
     }
 
+    public RedisAgent(final String server, final int port, final String password) {
+        this.jedis = new Jedis(server, port);
+        this.jedis.auth(password);
+    }
+
+    public RedisAgent(final String server, final int port, final String user, final String password) {
+        this.jedis = new Jedis(server, port);
+        this.jedis.auth(user, password);
+    }
+
     @Override
     public byte[] read(final String hash) {
         final byte[] hashAsBytes = stringToBytes(hash);
