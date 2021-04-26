@@ -7,6 +7,7 @@ import com.example.idempotence.idempotent.annotations.Idempotent;
 import com.example.idempotence.idempotent.hash.HashingStrategy;
 import com.example.idempotence.idempotent.hash.HashingStrategyException;
 import com.example.idempotence.idempotent.hash.HashingStrategySelector;
+import com.example.idempotence.idempotent.logging.IdempotenceLogger;
 import com.example.idempotence.idempotent.payload.PayloadSerializer;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -26,17 +27,20 @@ public class IdempotenceAspect {
 
     private final IdempotenceProps idempotenceProps;
     private final IdempotentAgent idempotentAgent;
+    private final IdempotenceLogger idempotenceLogger;
 
     @Autowired
     public IdempotenceAspect(final IdempotenceProps idempotenceProps, final IdempotentAgent idempotentAgent) {
         this.idempotenceProps = idempotenceProps;
         this.idempotentAgent = idempotentAgent;
+        this.idempotenceLogger = new IdempotenceLogger(idempotenceProps.getLogging());
     }
 
     @Around("@annotation(com.example.idempotence.idempotent.annotations.Idempotent)")
     public Object assertIdempotence(ProceedingJoinPoint joinPoint) throws Throwable {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method method = signature.getMethod();
+        idempotenceLogger.logStart(method.getName());
 
         Idempotent idempotentAnnotation = method.getAnnotation(Idempotent.class);
 
@@ -49,7 +53,7 @@ public class IdempotenceAspect {
         Object[] usedArgs = ParameterFilter.filter(includes, excludes, parameterNames, allArgs);
 
         if (usedArgs.length == 0) {
-            System.out.println("This code will always be executed");
+            idempotenceLogger.logAlwaysExecuted(method.getName());
             return joinPoint.proceed();
         }
 
@@ -58,14 +62,19 @@ public class IdempotenceAspect {
 
         byte[] returnValue = idempotentAgent.read(hash);
         if (null != returnValue) {
-            System.out.println("Object already executed");
+            idempotenceLogger.logExisting(method.getName());
+            idempotenceLogger.logEnd(method.getName());
             return PayloadSerializer.deserialize(returnValue);
+        } else {
+            idempotenceLogger.logNew(method.getName());
         }
 
         final Object returnedObject = joinPoint.proceed();
+        idempotenceLogger.logExecution(method.getName(), getTtl(idempotentAnnotation));
         byte[] payload = PayloadSerializer.serialize((Serializable) returnedObject);
         idempotentAgent.save(hash, payload, getTtl(idempotentAnnotation));
 
+        idempotenceLogger.logEnd(method.getName());
         return returnedObject;
     }
 
