@@ -9,6 +9,10 @@ public class RedisAgent implements IdempotentAgent {
 
     private final Jedis jedis;
 
+    public RedisAgent(final String url) {
+        this.jedis = new Jedis(url);
+    }
+
     public RedisAgent(final String server, final int port) {
         this.jedis = new Jedis(server, port);
     }
