@@ -40,7 +40,8 @@ public class IdempotenceAspect {
     public Object assertIdempotence(ProceedingJoinPoint joinPoint) throws Throwable {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method method = signature.getMethod();
-        idempotenceLogger.logStart(method.getName());
+        final String source = signature.getDeclaringTypeName() + "." + method.getName();
+        idempotenceLogger.logStart(source);
 
         Idempotent idempotentAnnotation = method.getAnnotation(Idempotent.class);
 
@@ -53,28 +54,28 @@ public class IdempotenceAspect {
         Object[] usedArgs = ParameterFilter.filter(includes, excludes, parameterNames, allArgs);
 
         if (usedArgs.length == 0) {
-            idempotenceLogger.logAlwaysExecuted(method.getName());
+            idempotenceLogger.logAlwaysExecuted(source);
             return joinPoint.proceed();
         }
 
         final HashingStrategy hashingStrategy = getHashingStrategy(idempotentAnnotation);
-        String hash = hashingStrategy.calculateHash(usedArgs);
+        String hash = hashingStrategy.calculateHash(source, usedArgs);
 
         byte[] returnValue = idempotentAgent.read(hash);
         if (null != returnValue) {
-            idempotenceLogger.logExisting(method.getName());
-            idempotenceLogger.logEnd(method.getName());
+            idempotenceLogger.logExisting(source);
+            idempotenceLogger.logEnd(source);
             return PayloadSerializer.deserialize(returnValue);
         } else {
-            idempotenceLogger.logNew(method.getName());
+            idempotenceLogger.logNew(source);
         }
 
         final Object returnedObject = joinPoint.proceed();
-        idempotenceLogger.logExecution(method.getName(), getTtl(idempotentAnnotation));
+        idempotenceLogger.logExecution(source, getTtl(idempotentAnnotation));
         byte[] payload = PayloadSerializer.serialize((Serializable) returnedObject);
         idempotentAgent.save(hash, payload, getTtl(idempotentAnnotation));
 
-        idempotenceLogger.logEnd(method.getName());
+        idempotenceLogger.logEnd(source);
         return returnedObject;
     }
 
