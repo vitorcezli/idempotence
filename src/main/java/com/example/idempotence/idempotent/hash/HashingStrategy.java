@@ -2,5 +2,5 @@ package com.example.idempotence.idempotent.hash;
 
 public interface HashingStrategy {
 
-    String calculateHash(Object[] objects);
+    String calculateHash(String source, Object[] parameters);
 }

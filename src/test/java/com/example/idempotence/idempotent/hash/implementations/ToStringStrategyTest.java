@@ -9,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class ToStringStrategyTest {
 
     private final ToStringStrategy toStringStrategy = new ToStringStrategy();
+    private static final String SOURCE = "source";
 
     @Test
     void shouldCalculateHashCorrectly1() {
@@ -16,8 +17,8 @@ class ToStringStrategyTest {
         final MockClass mock2 = new MockClass("string2", 0);
         final Object[] objects = Arrays.asList(mock1, mock2).toArray();
 
-        final String hash = toStringStrategy.calculateHash(objects);
-        assertEquals("string1-string2", hash);
+        final String hash = toStringStrategy.calculateHash(SOURCE, objects);
+        assertEquals(SOURCE + "-string1-string2", hash);
     }
 
     @Test
@@ -26,7 +27,7 @@ class ToStringStrategyTest {
         final MockClass mock2 = new MockClass("---otherString", 0);
         final Object[] objects = Arrays.asList(mock1, mock2).toArray();
 
-        final String hash = toStringStrategy.calculateHash(objects);
-        assertEquals("--string----otherString", hash);
+        final String hash = toStringStrategy.calculateHash(SOURCE, objects);
+        assertEquals(SOURCE + "---string----otherString", hash);
     }
 }

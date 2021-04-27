@@ -8,9 +8,10 @@ import java.util.stream.Collectors;
 public class ToStringStrategy implements HashingStrategy {
 
     @Override
-    public String calculateHash(Object[] objects) {
-        return Arrays.stream(objects)
-                     .map(Object::toString)
-                     .collect(Collectors.joining("-"));
+    public String calculateHash(String source, Object[] parameters) {
+        final String parametersConcat = Arrays.stream(parameters)
+                                              .map(Object::toString)
+                                              .collect(Collectors.joining("-"));
+        return source + "-" + parametersConcat;
     }
 }

@@ -9,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class HashCodeStrategyTest {
 
     private final HashCodeStrategy hashCodeStrategy = new HashCodeStrategy();
+    private static final String SOURCE = "source";
 
     @Test
     void shouldCalculateHashCorrectly1() {
@@ -16,8 +17,8 @@ class HashCodeStrategyTest {
         final MockClass mock2 = new MockClass("string", 10);
         final Object[] objects = Arrays.asList(mock1, mock2).toArray();
 
-        final String hash = hashCodeStrategy.calculateHash(objects);
-        assertEquals("-1-10", hash);
+        final String hash = hashCodeStrategy.calculateHash(SOURCE, objects);
+        assertEquals(SOURCE + "--1-10", hash);
     }
 
     @Test
@@ -26,7 +27,7 @@ class HashCodeStrategyTest {
         final MockClass mock2 = new MockClass("string", -10);
         final Object[] objects = Arrays.asList(mock1, mock2).toArray();
 
-        final String hash = hashCodeStrategy.calculateHash(objects);
-        assertEquals("-1--10", hash);
+        final String hash = hashCodeStrategy.calculateHash(SOURCE, objects);
+        assertEquals(SOURCE + "--1--10", hash);
     }
 }
