@@ -4,7 +4,6 @@ import com.example.idempotence.idempotent.agents.IdempotentAgent;
 import org.apache.commons.collections4.map.PassiveExpiringMap;
 
 import java.util.HashMap;
-import java.util.Set;
 
 public class MemoryAgent implements IdempotentAgent {
 
@@ -27,12 +26,12 @@ public class MemoryAgent implements IdempotentAgent {
 
     @Override
     public void save(final String hash, final byte[] payload, final int ttl) {
-        assertPassiveExpiringMapForTtl(ttl);
+        assurePassiveExpiringMapForTtl(ttl);
         final PassiveExpiringMap<String, byte[]> map = this.mapping.get(ttl);
         map.put(hash, payload);
     }
 
-    private void assertPassiveExpiringMapForTtl(final int ttl) {
+    private void assurePassiveExpiringMapForTtl(final int ttl) {
         if (!this.mapping.containsKey(ttl)) {
             final PassiveExpiringMap<String, byte[]> map = generateMapForTtl(ttl);
             this.mapping.put(ttl, map);
