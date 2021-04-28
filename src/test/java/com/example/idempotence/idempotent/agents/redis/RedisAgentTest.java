@@ -42,7 +42,7 @@ class RedisAgentTest {
     @Test
     void shouldReturnBytesSavedOnKey() {
         final byte[] payload = generatePayload();
-        jedis.set(KEY.getBytes(StandardCharsets.UTF_8), payload);
+        jedis.set(keyAsBytes(), payload);
 
         final byte[] returnBytes = redisAgent.read(KEY);
 
@@ -66,11 +66,21 @@ class RedisAgentTest {
     }
 
     @Test
-    void shouldSaveCorrectBytesWithTtl() {
+    void shouldSaveCorrectBytesWithoutTtl() {
+        final byte[] payload = generatePayload();
+        redisAgent.save(KEY, payload, 0);
+
+        final byte[] returnBytes = jedis.get(keyAsBytes());
+        assertArrayEquals(payload, returnBytes);
     }
 
     @Test
-    void shouldSaveCorrectBytesWithoutTtl() {
+    void shouldSaveCorrectBytesWithTtl() {
+        final byte[] payload = generatePayload();
+        redisAgent.save(KEY, payload, 10);
+
+        final byte[] returnBytes = jedis.get(keyAsBytes());
+        assertArrayEquals(payload, returnBytes);
     }
 
     @Test
@@ -79,6 +89,10 @@ class RedisAgentTest {
 
     @Test
     void shouldDeleteAfterTtl2() {
+    }
+
+    private byte[] keyAsBytes() {
+        return KEY.getBytes(StandardCharsets.UTF_8);
     }
 
     private byte[] generatePayload() {
