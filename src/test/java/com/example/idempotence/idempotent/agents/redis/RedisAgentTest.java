@@ -11,6 +11,7 @@ import redis.clients.jedis.Jedis;
 import java.nio.charset.StandardCharsets;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 @Testcontainers
@@ -40,15 +41,47 @@ class RedisAgentTest {
 
     @Test
     void shouldReturnBytesSavedOnKey() {
-        final byte[] bytes = {0x10, 0x11};
-        jedis.set(KEY.getBytes(StandardCharsets.UTF_8), bytes);
+        final byte[] payload = generatePayload();
+        jedis.set(KEY.getBytes(StandardCharsets.UTF_8), payload);
 
         final byte[] returnBytes = redisAgent.read(KEY);
 
-        assertArrayEquals(bytes, returnBytes);
+        assertArrayEquals(payload, returnBytes);
     }
 
     @Test
-    void save() {
+    void shouldSaveWithoutTtl() {
+        final byte[] payload = generatePayload();
+        redisAgent.save(KEY, payload, 0);
+
+        // -1 is returned if key doesn't have expiration time.
+        assertEquals(jedis.ttl(KEY), -1);
+    }
+
+    @Test
+    void shouldSaveWithTtl() {
+        final byte[] payload = generatePayload();
+        redisAgent.save(KEY, payload, 10);
+        assertEquals(jedis.ttl(KEY), 10);
+    }
+
+    @Test
+    void shouldSaveCorrectBytesWithTtl() {
+    }
+
+    @Test
+    void shouldSaveCorrectBytesWithoutTtl() {
+    }
+
+    @Test
+    void shouldDeleteAfterTtl1() {
+    }
+
+    @Test
+    void shouldDeleteAfterTtl2() {
+    }
+
+    private byte[] generatePayload() {
+        return new byte[] {0x10, 0x11};
     }
 }
