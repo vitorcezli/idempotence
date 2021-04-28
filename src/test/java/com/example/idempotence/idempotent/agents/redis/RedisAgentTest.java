@@ -12,7 +12,9 @@ import java.nio.charset.StandardCharsets;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Testcontainers
 class RedisAgentTest {
@@ -84,11 +86,43 @@ class RedisAgentTest {
     }
 
     @Test
-    void shouldDeleteAfterTtl1() {
+    void shouldDeleteAfterTtl1() throws InterruptedException {
+        final byte[] payload = generatePayload();
+        redisAgent.save(KEY, payload, 1);
+
+        Thread.sleep(1200);
+
+        assertFalse(jedis.exists(KEY));
     }
 
     @Test
-    void shouldDeleteAfterTtl2() {
+    void shouldNotDeleteBeforeTtl1() throws InterruptedException {
+        final byte[] payload = generatePayload();
+        redisAgent.save(KEY, payload, 1);
+
+        Thread.sleep(800);
+
+        assertTrue(jedis.exists(KEY));
+    }
+
+    @Test
+    void shouldDeleteAfterTtl2() throws InterruptedException {
+        final byte[] payload = generatePayload();
+        redisAgent.save(KEY, payload, 2);
+
+        Thread.sleep(2200);
+
+        assertFalse(jedis.exists(KEY));
+    }
+
+    @Test
+    void shouldNotDeleteBeforeTtl2() throws InterruptedException {
+        final byte[] payload = generatePayload();
+        redisAgent.save(KEY, payload, 2);
+
+        Thread.sleep(1800);
+
+        assertTrue(jedis.exists(KEY));
     }
 
     private byte[] keyAsBytes() {
