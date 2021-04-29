@@ -11,6 +11,10 @@ public class ParameterFilter {
             final List<String> parameterNames,
             final Object[] args
     ) throws ParameterFilterException {
+        if (containsFilterValues(includes) && containsFilterValues(excludes)) {
+            final String message = "cannot both includes and excludes be defined on the same function";
+            throw new ParameterFilterException(message);
+        }
         if (containsFilterValues(includes)) {
             return processInclusion(includes, parameterNames, args);
         }
