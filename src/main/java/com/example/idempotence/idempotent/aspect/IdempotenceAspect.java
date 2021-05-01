@@ -1,4 +1,4 @@
-package com.example.idempotence;
+package com.example.idempotence.idempotent.aspect;
 
 import com.example.idempotence.idempotent.configuration.IdempotenceProps;
 import com.example.idempotence.idempotent.filter.ParameterFilter;
