@@ -6,15 +6,14 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.Serializable;
 
 public class PayloadSerializer {
 
-    public static byte[] serialize(Serializable serializable) throws IOException {
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
+    public static byte[] serialize(final Object object) throws IOException {
+        final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        final ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
 
-        objectOutputStream.writeObject(serializable);
+        objectOutputStream.writeObject(object);
         objectOutputStream.flush();
         objectOutputStream.close();
 
@@ -22,14 +21,13 @@ public class PayloadSerializer {
         return byteArrayOutputStream.toByteArray();
     }
 
-    public static Serializable deserialize(byte[] binaryObject)
-            throws IOException, ClassNotFoundException {
-        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(binaryObject);
-        ObjectInput objectInputStream = new ObjectInputStream(byteArrayInputStream);
+    public static Object deserialize(final byte[] binaryObject) throws IOException, ClassNotFoundException {
+        final ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(binaryObject);
+        final ObjectInput objectInputStream = new ObjectInputStream(byteArrayInputStream);
 
-        Serializable serializable = (Serializable) objectInputStream.readObject();
+        final Object returnedObject = objectInputStream.readObject();
         objectInputStream.close();
 
-        return serializable;
+        return returnedObject;
     }
 }

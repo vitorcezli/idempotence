@@ -14,7 +14,6 @@ import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 
@@ -61,7 +60,7 @@ public class IdempotenceAspect {
         final Object returnedObject = joinPoint.proceed();
         idempotenceLogger.logExecution(source, ttl);
 
-        final byte[] serializedObject = PayloadSerializer.serialize((Serializable) returnedObject);
+        final byte[] serializedObject = PayloadSerializer.serialize(returnedObject);
         idempotentAgent.save(hash, serializedObject, ttl);
 
         idempotenceLogger.logEnd(source);
