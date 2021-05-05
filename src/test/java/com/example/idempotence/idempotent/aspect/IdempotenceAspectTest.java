@@ -1,6 +1,6 @@
 package com.example.idempotence.idempotent.aspect;
 
-import com.example.idempotence.idempotent.agents.IdempotentAgent;
+import com.example.idempotence.idempotent.agents.IdempotenceAgent;
 import com.example.idempotence.idempotent.agents.memory.MemoryAgent;
 import com.example.idempotence.idempotent.configuration.IdempotenceProps;
 import com.example.idempotence.idempotent.filter.ParameterFilterException;
@@ -25,8 +25,9 @@ class IdempotenceAspectTest {
     public void setUp() {
         final IdempotenceProps idempotenceProps = new IdempotenceProps();
         final PropSelector propSelector = new PropSelector(idempotenceProps);
-        final IdempotentAgent idempotentAgent = new MemoryAgent();
-        final IdempotenceAspect idempotenceAspect = new IdempotenceAspect(propSelector, idempotentAgent);
+        final IdempotenceAgent idempotenceAgent = new MemoryAgent();
+        final IdempotenceAspect idempotenceAspect = new IdempotenceAspect(propSelector,
+                idempotenceAgent);
 
         final AspectJProxyFactory aspectJProxyFactory = new AspectJProxyFactory(new MockService());
         aspectJProxyFactory.addAspect(idempotenceAspect);

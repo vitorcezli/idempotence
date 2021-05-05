@@ -1,6 +1,6 @@
 package com.example.idempotence.idempotent.aspect;
 
-import com.example.idempotence.idempotent.agents.IdempotentAgent;
+import com.example.idempotence.idempotent.agents.IdempotenceAgent;
 import com.example.idempotence.idempotent.annotations.Idempotent;
 import com.example.idempotence.idempotent.filter.ParameterFilter;
 import com.example.idempotence.idempotent.filter.ParameterFilterException;
@@ -22,13 +22,13 @@ import java.util.List;
 public class IdempotenceAspect {
 
     private final PropSelector propSelector;
-    private final IdempotentAgent idempotentAgent;
+    private final IdempotenceAgent idempotenceAgent;
     private final IdempotenceLogger idempotenceLogger;
 
     @Autowired
-    public IdempotenceAspect(final PropSelector propSelector, final IdempotentAgent idempotentAgent) {
+    public IdempotenceAspect(final PropSelector propSelector, final IdempotenceAgent idempotenceAgent) {
         this.propSelector = propSelector;
-        this.idempotentAgent = idempotentAgent;
+        this.idempotenceAgent = idempotenceAgent;
         this.idempotenceLogger = new IdempotenceLogger(propSelector.getLogging());
     }
 
@@ -47,7 +47,7 @@ public class IdempotenceAspect {
 
         final HashingStrategy hashingStrategy = propSelector.getHashingStrategy(idempotentAnnotation);
         final String hash = hashingStrategy.calculateHash(source, usedArgs);
-        final byte[] returnValue = idempotentAgent.read(hash);
+        final byte[] returnValue = idempotenceAgent.read(hash);
 
         if (null != returnValue) {
             idempotenceLogger.logExisting(source);
@@ -61,7 +61,7 @@ public class IdempotenceAspect {
         idempotenceLogger.logExecution(source, ttl);
 
         final byte[] serializedObject = PayloadSerializer.serialize(returnedObject);
-        idempotentAgent.save(hash, serializedObject, ttl);
+        idempotenceAgent.save(hash, serializedObject, ttl);
 
         idempotenceLogger.logEnd(source);
         return returnedObject;

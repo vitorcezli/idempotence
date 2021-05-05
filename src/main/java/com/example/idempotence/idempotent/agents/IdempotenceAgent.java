@@ -1,6 +1,6 @@
 package com.example.idempotence.idempotent.agents;
 
-public interface IdempotentAgent {
+public interface IdempotenceAgent {
 
     /**
      * @param hash corresponding hash value of the object that will be saved on agent.

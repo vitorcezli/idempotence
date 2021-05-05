@@ -1,11 +1,11 @@
 package com.example.idempotence.idempotent.agents.memory;
 
-import com.example.idempotence.idempotent.agents.IdempotentAgent;
+import com.example.idempotence.idempotent.agents.IdempotenceAgent;
 import org.apache.commons.collections4.map.PassiveExpiringMap;
 
 import java.util.HashMap;
 
-public class MemoryAgent implements IdempotentAgent {
+public class MemoryAgent implements IdempotenceAgent {
 
     private final HashMap<Integer, PassiveExpiringMap<String, byte[]>> mapping;
 

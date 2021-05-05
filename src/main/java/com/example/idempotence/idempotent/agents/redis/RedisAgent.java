@@ -1,11 +1,11 @@
 package com.example.idempotence.idempotent.agents.redis;
 
-import com.example.idempotence.idempotent.agents.IdempotentAgent;
+import com.example.idempotence.idempotent.agents.IdempotenceAgent;
 import redis.clients.jedis.Jedis;
 
 import java.nio.charset.StandardCharsets;
 
-public class RedisAgent implements IdempotentAgent {
+public class RedisAgent implements IdempotenceAgent {
 
     private final Jedis jedis;
 
