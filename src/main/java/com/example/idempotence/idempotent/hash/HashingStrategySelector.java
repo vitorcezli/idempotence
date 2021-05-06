@@ -8,7 +8,7 @@ import java.util.Map;
 
 public class HashingStrategySelector {
 
-    private final static Map<String, HashingStrategy> strategies = new HashMap<>() {{
+    private final static Map<String, HashingStrategy> strategies = new HashMap<String, HashingStrategy>() {{
         put("toString", new ToStringStrategy());
         put("hashCode", new HashCodeStrategy());
     }};
