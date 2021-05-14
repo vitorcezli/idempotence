@@ -5,13 +5,17 @@ import vitorcezli.springext.idempotence.hash.HashingStrategy;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-public class ToStringStrategy implements HashingStrategy {
+public class ToStringStrategy extends HashingStrategy {
 
     @Override
-    public String calculateHash(String source, Object[] parameters) {
-        final String parametersConcat = Arrays.stream(parameters)
-                                              .map(Object::toString)
-                                              .collect(Collectors.joining("-"));
-        return source + "-" + parametersConcat;
+    protected String calculateHashObjects(final Object[] objects) {
+        return Arrays.stream(objects)
+                .map(Object::toString)
+                .map(this::stringDuplicatedSeparatorCharacter)
+                .collect(Collectors.joining("-"));
+    }
+
+    private String stringDuplicatedSeparatorCharacter(final String source) {
+        return source.replaceAll("-", "--");
     }
 }

@@ -5,14 +5,13 @@ import vitorcezli.springext.idempotence.hash.HashingStrategy;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-public class HashCodeStrategy implements HashingStrategy {
+public class HashCodeStrategy extends HashingStrategy {
 
     @Override
-    public String calculateHash(String source, Object[] parameters) {
-        final String parametersConcat = Arrays.stream(parameters)
-                                              .map(Object::hashCode)
-                                              .map(String::valueOf)
-                                              .collect(Collectors.joining("-"));
-        return source + "-" + parametersConcat;
+    protected String calculateHashObjects(final Object[] objects) {
+        return Arrays.stream(objects)
+                .map(Object::hashCode)
+                .map(String::valueOf)
+                .collect(Collectors.joining("-"));
     }
 }

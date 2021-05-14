@@ -1,6 +1,10 @@
 package vitorcezli.springext.idempotence.hash;
 
-public interface HashingStrategy {
+public abstract class HashingStrategy {
 
-    String calculateHash(String source, Object[] parameters);
+    public String calculateHash(final String source, final Object[] objects) {
+        return source + "-" + calculateHashObjects(objects);
+    }
+
+    protected abstract String calculateHashObjects(final Object[] objects);
 }
