@@ -8,11 +8,24 @@
 		<version>2.4.4</version>
 		<relativePath/>
 	</parent>
-	<groupId>vitorcezli.springext</groupId>
+	<groupId>io.github.vitorcezli</groupId>
 	<artifactId>idempotence</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>idempotence</name>
-	<description>Spring Boot Idempotence</description>
+	<version>0.0.1</version>
+	<packaging>jar</packaging>
+	<name>${project.groupId}:${project.artifactId}</name>
+	<description>Idempotence assertion library for Spring applications</description>
+	<url>https://github.com/vitorcezli/springext</url>
+	<licenses>
+		<license>
+			<name>Apache License 2.0</name>
+			<url>https://www.apache.org/licenses/LICENSE-2.0</url>
+		</license>
+	</licenses>
+	<scm>
+		<connection>scm:git:git://github.com/SeunMatt/mysql-backup4j.git</connection>
+		<developerConnection>scm:git:ssh://github.com/vitorcezli/springext.git</developerConnection>
+		<url>https://github.com/vitorcezli/springext/tree/main</url>
+	</scm>
 	<properties>
 		<java.version>8</java.version>
 	</properties>
