@@ -22,7 +22,7 @@
 		</license>
 	</licenses>
 	<scm>
-		<connection>scm:git:git://github.com/SeunMatt/mysql-backup4j.git</connection>
+		<connection>scm:git:git://github.com/vitorcezli/springext.git</connection>
 		<developerConnection>scm:git:ssh://github.com/vitorcezli/springext.git</developerConnection>
 		<url>https://github.com/vitorcezli/springext/tree/main</url>
 	</scm>
