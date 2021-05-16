@@ -1,2 +1,4 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-io.github.vitorcezli.idempotence.aspect.IdempotenceAspect
+io.github.vitorcezli.idempotence.aspect.PropSelector,\
+io.github.vitorcezli.idempotence.aspect.IdempotenceAspect,\
+io.github.vitorcezli.idempotence.configuration.IdempotenceProps
