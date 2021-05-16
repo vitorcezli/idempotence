@@ -28,11 +28,11 @@ public class ParameterFilter {
     private static Object[] processInclusion(
             final List<String> filterValues,
             final List<String> parameters,
-            Object[] args
+            final Object[] args
     ) throws ParameterFilterException {
         assertFilterValuesAreValid(filterValues, parameters);
 
-        List<Object> selectedArgs = new ArrayList<>();
+        final List<Object> selectedArgs = new ArrayList<>();
         for (int i = 0; i < parameters.size(); i++) {
             if (filterValues.contains(parameters.get(i))) {
                 selectedArgs.add(args[i]);
@@ -45,11 +45,11 @@ public class ParameterFilter {
     private static Object[] processExclusion(
             final List<String> filterValues,
             final List<String> parameters,
-            Object[] args
+            final Object[] args
     ) throws ParameterFilterException {
         assertFilterValuesAreValid(filterValues, parameters);
 
-        List<Object> selectedArgs = new ArrayList<>();
+        final List<Object> selectedArgs = new ArrayList<>();
         for (int i = 0; i < parameters.size(); i++) {
             if (!filterValues.contains(parameters.get(i))) {
                 selectedArgs.add(args[i]);

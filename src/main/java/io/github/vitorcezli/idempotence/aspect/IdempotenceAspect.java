@@ -33,7 +33,7 @@ public class IdempotenceAspect {
     }
 
     @Around("@annotation(io.github.vitorcezli.idempotence.annotations.Idempotent)")
-    public Object assertIdempotence(ProceedingJoinPoint joinPoint) throws Throwable {
+    public Object assertIdempotence(final ProceedingJoinPoint joinPoint) throws Throwable {
         final String source = extractSource(joinPoint);
         idempotenceLogger.logStart(source);
 
