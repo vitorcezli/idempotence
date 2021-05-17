@@ -6,7 +6,7 @@ agents, developing new hash strategies, and reporting bugs.
 ### Creation of new agents
 
 Currently, the code just has two agents: _MemoryAgent_ and _RedisAgent_.
-You can create a new agent following the guideline on (AGENTS.md)[AGENTS.md]
+You can create a new agent following the guideline on [AGENTS.md](AGENTS.md)
 and submit a PR to this repository. The agent must be developed on *idempotence/agents*,
 creating a folder with the same name as the agent and tested on the *test*
 folder.
