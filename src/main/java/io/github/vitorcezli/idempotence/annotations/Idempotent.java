@@ -10,6 +10,6 @@ import java.lang.annotation.Target;
 public @interface Idempotent {
     String[] include() default "";
     String[] exclude() default "";
-    String strategy() default "";
+    String hash() default "";
     int ttl() default -1;
 }

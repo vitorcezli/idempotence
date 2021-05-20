@@ -24,7 +24,7 @@ class PropSelector {
 
     public HashingStrategy getHashingStrategy(final Idempotent idempotent)
             throws HashingStrategyException {
-        String strategyString = idempotent.strategy();
+        String strategyString = idempotent.hash();
         if (strategyString.length() == 0) {
             strategyString = idempotenceProps.getHash();
         }

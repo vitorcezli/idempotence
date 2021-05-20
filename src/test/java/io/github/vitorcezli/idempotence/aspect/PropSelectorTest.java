@@ -131,7 +131,7 @@ class PropSelectorTest {
             }
 
             @Override
-            public String strategy() {
+            public String hash() {
                 return strategy;
             }
 

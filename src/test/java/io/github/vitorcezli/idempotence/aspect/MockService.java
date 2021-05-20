@@ -16,7 +16,7 @@ class MockService {
         return executed;
     }
 
-    @Idempotent(strategy = "hashCode")
+    @Idempotent(hash = "hashCode")
     public String getSomething(final String returnValue) {
         executed = true;
         return returnValue;
@@ -28,7 +28,7 @@ class MockService {
         return returnValue;
     }
 
-    @Idempotent(strategy = "invalid")
+    @Idempotent(hash = "invalid")
     public String invalidHashing(final String returnValue) {
         executed = true;
         return returnValue;
