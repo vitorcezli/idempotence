@@ -12,7 +12,8 @@ below:
   is generated after a hash strategy is applied. `final byte[] payload` is object
   returned after the function execution on its serialized form; and `final int ttl`
   is a value that represents how many seconds the idempotent agent must assure
-  idempotence of a function;
+  idempotence for a function (if `ttl <= 0`, the idempotence must be assured without
+  expiration);
 * `byte[] read(final String hash)`: This function must return the object generated
   after the execution of a function with the `@Idempotent` annotation (it must
   be the same `byte[]` content passed to the `void save` function above). `null`
