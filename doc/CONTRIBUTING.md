@@ -38,4 +38,5 @@ If you find a bug when using this package, create an issue with the details of t
 
 ### Another way to contribute?
 
-If you want to contribute to this project another way, email vitorcezli@gmail.com.
+If you want to contribute to this project another way, create an issue, or email
+vitorcezli@gmail.com.
