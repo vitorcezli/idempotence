@@ -181,4 +181,22 @@ class IdempotenceAspectTest {
         assertThrows(HashingStrategyException.class, () -> serviceProxy.invalidHashing("value"));
         assertFalse(serviceProxy.getExecuted());
     }
+
+    @Test
+    @DisplayName("Should not execute an idempotent function twice if doesn't have parameters")
+    public void shouldNotExecuteFunctionWithoutParameters() {
+        serviceProxy.emptyParameters();
+        serviceProxy.resetExecution();
+        serviceProxy.emptyParameters();
+        assertFalse(serviceProxy.getExecuted());
+    }
+
+    @Test
+    @DisplayName("Should not execute function twice if all arguments are excluded")
+    public void shouldNotExecuteFunctionWithAllArgumentsExcluded() {
+        serviceProxy.excludeAll("value1", "value2");
+        serviceProxy.resetExecution();
+        serviceProxy.excludeAll("value3", "value4");
+        assertFalse(serviceProxy.getExecuted());
+    }
 }

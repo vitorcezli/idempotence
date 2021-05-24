@@ -51,4 +51,15 @@ class MockService {
         executed = true;
         return value1 + value2;
     }
+
+    @Idempotent(exclude = {"value1", "value2"})
+    public String excludeAll(final String value1, final String value2) {
+        executed = true;
+        return value1 + value2;
+    }
+
+    @Idempotent
+    public void emptyParameters() {
+        executed = true;
+    }
 }

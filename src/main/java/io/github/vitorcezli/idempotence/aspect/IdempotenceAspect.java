@@ -40,11 +40,6 @@ public class IdempotenceAspect {
         final Object[] usedArgs = getValidArguments(joinPoint);
         final Idempotent idempotentAnnotation = extractAnnotation(joinPoint);
 
-        if (usedArgs.length == 0) {
-            idempotenceLogger.logAlwaysExecuted(source);
-            return joinPoint.proceed();
-        }
-
         final HashingStrategy hashingStrategy = propSelector.getHashingStrategy(idempotentAnnotation);
         final String hash = hashingStrategy.calculateHash(source, usedArgs);
         final byte[] returnValue = idempotenceAgent.read(hash);

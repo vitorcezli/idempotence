@@ -16,10 +16,6 @@ public class IdempotenceLogger {
         this.loggingPrefix = "[IdempotenceLogger]";
     }
 
-    public void logAlwaysExecuted(final String source) {
-        this.logWarn(source + " will always be executed");
-    }
-
     public void logStart(final String source) {
         this.logInfo("Started for source " + source);
     }
