@@ -8,7 +8,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 
 @Configuration
-@ConfigurationProperties(prefix = "vitorcezli.spring-ext.idempotence")
+@ConfigurationProperties(prefix = "io.github.vitorcezli.idempotence")
 @Validated
 public class IdempotenceProps {
 

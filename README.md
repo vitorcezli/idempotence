@@ -69,15 +69,15 @@ or create your bean implementing *IdempotenceAgent* interface
 
 Hash strategy, ttl, and also if events of idempotence must be logged, can be
 globally configured on _application.properties_, defining `hash`, `ttl`
-and `logging`, respectively, on `vitorcezli.spring-ext.idempotence`. For
+and `logging`, respectively, on `io.github.vitorcezli.idempotence`. For
 example, if you want to globally assure idempotence for one minute and
 `toString` as the default hash strategy, also logging the events of idempotence,
 you must insert the following lines on your _application.properties_:
 
 ```
-vitorcezli.spring-ext.idempotence.hash=toString
-vitorcezli.spring-ext.idempotence.ttl=60
-vitorcezli.spring-ext.idempotence.logging=true
+io.github.vitorcezli.idempotence.hash=toString
+io.github.vitorcezli.idempotence.ttl=60
+io.github.vitorcezli.idempotence.logging=true
 ```
 
 **Notes**: Local definitions take precedence over global configuration. This
