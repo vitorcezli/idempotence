@@ -56,8 +56,8 @@ public class EmailService {
 }
 ```
 
-Then you create a bean with the existing *IdempotenceAgent* as beans (as in the
-example below, where a *RedisAgent* is created using a `@Configuration` class),
+Then you can return a bean of the existing *IdempotenceAgent*s (as in the
+example below, where a *RedisAgent* is returned using a `@Configuration` class),
 
 ```java
 @Configuration
@@ -70,7 +70,7 @@ public class IdempotenceConfiguration {
 }
 ```
 
-or create your bean implementing *IdempotenceAgent* interface
+or create your bean implementing the *IdempotenceAgent* interface
 (see [AGENTS.md](doc/AGENTS.md)).
 
 ### Global configuration
