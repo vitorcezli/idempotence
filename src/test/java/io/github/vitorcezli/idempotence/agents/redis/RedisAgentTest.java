@@ -32,7 +32,9 @@ class RedisAgentTest {
 
     @BeforeEach
     public void setUp() {
-        redisAgent = new RedisAgent(container.getHost(), container.getFirstMappedPort());
+        final String redisUri = String.format("redis://%s:%d", container.getHost(),
+                container.getFirstMappedPort());
+        redisAgent = new RedisAgent(redisUri);
         jedis = new Jedis(container.getHost(), container.getFirstMappedPort());
     }
 

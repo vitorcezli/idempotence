@@ -9,22 +9,8 @@ public class RedisAgent implements IdempotenceAgent {
 
     private final Jedis jedis;
 
-    public RedisAgent(final String url) {
-        this.jedis = new Jedis(url);
-    }
-
-    public RedisAgent(final String server, final int port) {
-        this.jedis = new Jedis(server, port);
-    }
-
-    public RedisAgent(final String server, final int port, final String password) {
-        this.jedis = new Jedis(server, port);
-        this.jedis.auth(password);
-    }
-
-    public RedisAgent(final String server, final int port, final String user, final String password) {
-        this.jedis = new Jedis(server, port);
-        this.jedis.auth(user, password);
+    public RedisAgent(final String uri) {
+        this.jedis = new Jedis(uri);
     }
 
     @Override
