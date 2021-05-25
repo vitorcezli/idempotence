@@ -18,8 +18,8 @@ infinitely.
 After using this annotation on the functions that must be idempotent,
 *IdempotenceAgent* bean must be configured to define where the idempotence
 metadata will be saved. You can create a bean as defined on
-[AGENTS.md](doc/AGENTS.md) or use the available ones, *MemoryAgent()* and
-*RedisAgent(String redisUri)*, where the former saves the idempotence metadata
+[AGENTS.md](doc/AGENTS.md) or use the available ones, `MemoryAgent()` and
+`RedisAgent(String redisUri)`, where the former saves the idempotence metadata
 on memory, and the latter saves it on a Redis service.
 
 **Notes**:
@@ -35,11 +35,12 @@ on memory, and the latter saves it on a Redis service.
 - The functions annotated with `@Idempotent` must return void, or an object
   that implements the `Serializable` interface (all primitives implement this
   interface). The object of the first call is saved in the idempotence
-  metadata and returned instead of executing the next calls.
+  metadata and returned on the next calls, which are not executed because to
+  assure idempotence.
 
 ### Example
 
-Suppose you want to assure idempotence when sending e-mail to an user, and consider
+Suppose you want to have idempotence when sending e-mail to an user, and consider
 that `User.toHashCode()` is a great hash function that can distinguish the users.
 This way, you can use the `@Idempotent` annotation to include just the user, and
 indicate to apply `toHashCode()` to differentiate among method calls:
