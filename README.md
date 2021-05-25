@@ -22,28 +22,35 @@ metadata will be saved. You can create a bean as defined on
 *RedisAgent(String redisUri)*, where the former saves the idempotence metadata
 on memory, and the latter saves it on a Redis service.
 
-**Notes**: All the annotation's parameters are optional, defaulting to the values
-shown above. `include` and `exclude` cannot be used together, and
-*ParameterFilterException* if is raised at runtime if it occurs. If an invalid
-value is defined on `hash`, *HashingStrategyException* is raised. Currently, the
-only valid values for `hash` are `hashCode` and `toString`.
+**Notes**:
+
+- All the annotation's parameters are optional, defaulting to the values 
+  shown above. `include` and `exclude` cannot be used together, and
+  *ParameterFilterException* if is raised at runtime if it occurs. This
+  exception is also raised if invalid parameters are specified on `include`
+  and `exclude`;
+- If an invalid value is defined on `hash`, *HashingStrategyException* is
+  raised. Currently, the only valid values for `hash` are `hashCode` and
+  `toString`;
+- The functions annotated with `@Idempotent` must return void, or an object
+  that implements the `Serializable` interface (all primitives implement this
+  interface). The object of the first call is saved in the idempotence
+  metadata and returned instead of executing the next calls.
 
 ### Example
 
 Suppose you want to assure idempotence when sending e-mail to an user, and consider
 that `User.toHashCode()` is a great hash function that can distinguish the users.
-This way, you can use the `@Idempotent` annotation including just the user with its
-hash function, to differentiate among method calls. The code will be this way:
+This way, you can use the `@Idempotent` annotation to include just the user, and
+indicate to apply `toHashCode()` to differentiate among method calls:
 
 ```java
 @Service
 public class EmailService {
     
     @Idempotent(include = "user", hash = "hashCode")
-    public String send(User user, String emailHeader, String emailBody) {
+    public void send(User user, String emailHeader, String emailBody) {
         // logic here to send email
-        // ...
-        return body;
     }
 }
 ```
