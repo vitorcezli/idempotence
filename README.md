@@ -35,8 +35,8 @@ on memory, and the latter saves it on a Redis service.
 - The functions annotated with `@Idempotent` must return void, or an object
   that implements the `Serializable` interface (all primitives implement this
   interface). The object of the first call is saved in the idempotence
-  metadata and returned on the next calls, which are not executed because to
-  assure idempotence.
+  metadata and returned on the next calls, which are not executed to assure
+  idempotence.
 
 ### Example
 
