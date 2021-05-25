@@ -12,7 +12,6 @@ import javax.validation.constraints.NotEmpty;
 @Validated
 public class IdempotenceProps {
 
-    @Min(value = 0, message = "must be non-negative")
     private int ttl = 0;
 
     @NotEmpty
