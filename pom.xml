@@ -10,11 +10,11 @@
 	</parent>
 	<groupId>io.github.vitorcezli</groupId>
 	<artifactId>idempotence</artifactId>
-	<version>0.0.6-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<packaging>jar</packaging>
 	<name>${project.groupId}:${project.artifactId}</name>
 	<description>Idempotence assertion library for Spring applications</description>
-	<url>https://github.com/vitorcezli/springext</url>
+	<url>https://github.com/vitorcezli/idempotence</url>
 	<licenses>
 		<license>
 			<name>Apache License 2.0</name>
@@ -22,9 +22,9 @@
 		</license>
 	</licenses>
 	<scm>
-		<connection>scm:git:git://github.com/vitorcezli/springext.git</connection>
-		<developerConnection>scm:git:ssh://github.com/vitorcezli/springext.git</developerConnection>
-		<url>https://github.com/vitorcezli/springext/tree/main</url>
+		<connection>scm:git:git://github.com/vitorcezli/idempotence.git</connection>
+		<developerConnection>scm:git:ssh://github.com/vitorcezli/idempotence.git</developerConnection>
+		<url>https://github.com/vitorcezli/idempotence/tree/main</url>
 	</scm>
 	<properties>
 		<java.version>8</java.version>
@@ -89,7 +89,7 @@
 				<configuration>
 					<serverId>ossrh</serverId>
 					<nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
-					<autoReleaseAfterClose>false</autoReleaseAfterClose>
+					<autoReleaseAfterClose>true</autoReleaseAfterClose>
 				</configuration>
 			</plugin>
 		</plugins>
