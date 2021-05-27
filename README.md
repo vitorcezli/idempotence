@@ -104,7 +104,23 @@ If using Maven, insert the following dependency on your *pom.xml* file:
 </dependency>
 ```
 
-For Gradle, insert the following on *gradle.file*:
+For Gradle, verify if *gradle.file* is configured to read from Maven, by having
+this section:
+
+```gradle
+repositories {
+    mavenCentral()
+}
+```
+
+Then, insert `implementation 'io.github.vitorcezli:idempotence:1.0.0'` on
+`dependencies` section:
+
+```gradle
+dependencies {
+    implementation 'io.github.vitorcezli:idempotence:1.0.0'
+}
+```
 
 ### Contribution
 
