@@ -100,7 +100,7 @@ If using Maven, insert the following dependency on your *pom.xml* file:
 <dependency>
     <groupId>io.github.vitorcezli</groupId>
     <artifactId>idempotence</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
 </dependency>
 ```
 
@@ -113,12 +113,12 @@ repositories {
 }
 ```
 
-Then, insert `implementation 'io.github.vitorcezli:idempotence:1.0.0'` on
+Then, insert `implementation 'io.github.vitorcezli:idempotence:1.0.1'` on
 `dependencies` section:
 
 ```gradle
 dependencies {
-    implementation 'io.github.vitorcezli:idempotence:1.0.0'
+    implementation 'io.github.vitorcezli:idempotence:1.0.1'
 }
 ```
 
